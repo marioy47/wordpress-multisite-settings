@@ -24,6 +24,8 @@
 
 namespace Multisite_Settings;
 
+// Lets use composers autoload to load classes from the includes/ dir.
 require_once __DIR__ . '/vendor/autoload.php';
 
+// This class is creates and saves multisite options.
 Settings_Page::get_instance()->add_hooks();

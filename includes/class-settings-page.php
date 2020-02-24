@@ -9,7 +9,9 @@
 namespace Multisite_Settings;
 
 /**
- * Creates a new settings page on "Network>Custom Settings"
+ * Creates a new settings page on "Network Admin > Settings >Custom Settings".
+ *
+ * This class can't be instanciated. instead you need to call the static function `get_instance`
  */
 class Settings_Page {
 
@@ -30,7 +32,9 @@ class Settings_Page {
 	}
 
 	/**
-	 * Factory method.
+	 * Static Factory method.
+	 *
+	 * You can GET an instance of this class by calling `$a = Settings_Page::get_instance();`
 	 *
 	 * @return self
 	 */
@@ -42,7 +46,7 @@ class Settings_Page {
 	/**
 	 * Executes the add_action() WordPress methods.
 	 *
-	 * @return self
+	 * @return void
 	 */
 	public function add_hooks() {
 		// Register page on menu.
@@ -50,17 +54,16 @@ class Settings_Page {
 
 		// Function to execute when saving data.
 		add_action( 'network_admin_edit_' . $this->settings_slug . '-update', array( $this, 'update' ) );
-
-		return $this;
 	}
 
 	/**
 	 * Creates the sub-menu page and register the multisite settings.
 	 *
-	 * @return self
+	 * @return void
 	 */
 	public function menu_and_fields() {
 
+		// Create the submenu and register the page creation function.
 		add_submenu_page(
 			'settings.php',
 			__( 'Multisite Settings Page', 'multisite-settings' ),
@@ -70,7 +73,7 @@ class Settings_Page {
 			array( $this, 'create_page' )
 		);
 
-		// Restrict access to super admins.
+		// Register a new section on the page.
 		add_settings_section(
 			'default-section',
 			__( 'This the first and only section', 'multisite-settings' ),
@@ -78,6 +81,7 @@ class Settings_Page {
 			$this->settings_slug . '-page'
 		);
 
+		// Register a new variable and register the function that updates it.
 		register_setting( $this->settings_slug . '-page', 'first_input_var' );
 		add_settings_field(
 			'first_input_var',
@@ -86,12 +90,14 @@ class Settings_Page {
 			$this->settings_slug . '-page', // page.
 			'default-section' // section.
 		);
-
-		return $this;
 	}
 
 	/**
-	 * This creates the settings page html.
+	 * This creates the settings page itself.
+	 *
+	 * @return void
+	 *
+	 * @phpcs:disable WordPress.Security.NonceVerification.Recommended
 	 */
 	public function create_page() {
 		?>
@@ -117,6 +123,8 @@ class Settings_Page {
 
 	/**
 	 * Multisite options require its own update function. Here we make the actual update.
+	 *
+	 * @return void
 	 */
 	public function update() {
 		\check_admin_referer( $this->settings_slug . '-page-options' );
@@ -145,7 +153,7 @@ class Settings_Page {
 	}
 
 	/**
-	 * New section in the Settings page.
+	 * Html after the new section title.
 	 *
 	 * @return void
 	 */
