@@ -5,6 +5,7 @@ This is a fully functional plugin that does just two things:
 - Creates a Multisite Settings page in `Network Admin > Settings > Custom Settings`
 - Saves a "site" option, which is an option that works only in a multisite environment
 
+![Settings Page](settings-page.png)
 
 ## Development
 
